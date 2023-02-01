@@ -1,0 +1,74 @@
+#+author: Huehueocélotl
+#+title: Conectarse a una base de datos con R
+
+#+INFOJS_OPT: view:info toc:nil
+#+HTML_HEAD: <style>
+#+HTML_HEAD:  body { background: #a2d2ff; max-width: 768px; margin: 20px auto; color:#003049 ; font-family:'Verdana', sans-serif;}
+#+HTML_HEAD: </style>
+#+HTML_HEAD: <style> pre.src { overflow: auto; background: #edede9 }</style>
+#+HTML_HEAD: <style> .mmbox {background-color: #BFF2FF; padding: 10px 20px 10px 20px; }</style>
+#+HTML_HEAD: <style>code {background-color: #fff;}</style>
+
+* Introducción
+
+El propósito de este módulo es habilitar al usuario a para conectarse a una base de datos
+de manera remota usando el paquete estadístico R y realizar consultas básicas 
+usando syntaxis de SQL.
+
+Al finalizar el módulo podrás
+
+1) Conectarte a una base de datos tipo SQL/Mariadb/mySQL a través de un script en R.
+2) Obtener el listado de tablas dentro de la base de datos.
+3) Hacer consultas básicas para acceder a tablas y variables dentro de la base de datos.
+4) Hacer un anślisis estadístico en R.
+5) Presentar los resultados en un reporte semi-automatizado.
+
+
+* Tener acceso a R de manera local.
+
+Lo más recomendable es que tengas el programa R instalado en tu computadora (de manrea local).
+Es por la seguridad del acceso a la información, pues debemos escribir un programa que incluya la dirección del
+servidor en donde la base de datos está alojada, el nombre de usuario y la contraseña que se te haya asignado.
+
+** Actividad:
+
++ Crea una carpeta de nombre Modulo1
++ Crea un arcivo de texto ~conector.R~
++ Inicia una sesion de R con el directorio de trabajo Modulo1.
+
+* Credenciales de acceso
+
+El administrador de una base de datos lleva el control de las *credenciales de acceso* de las personas que pueden accedier a la informaición.
+Estas incluyen:
++ nombre de usuario
++ contraseñas
++ privilegios (leer/escribir/crear dentro de la base de datos).
+
+*¿Sabes cuáles son tus credenciales de acceso?*
+
+* Script conector
+
+En el archivo de texto escribimos lo siguiente
+
+#+begin_src R :results nil
+library(DBI)
+library(RMariaDB)
+
+# Connect to the MySQL database: con
+con <- dbConnect(RMariaDB::MariaDB(), #RMySQL::MySQL(), 
+                  dbname = "dbname", 
+                  host = "localhost", 
+                  port = 3306,
+                  user = "usrname",
+                  password = "passwd")
+
+## Get table names
+tables <- dbListTables(con)
+
+## # Display structure of tables
+str(tables)
+
+## # Import all tables
+tables <- lapply(tables , dbReadTable, conn = con)
+#+end_src
+
