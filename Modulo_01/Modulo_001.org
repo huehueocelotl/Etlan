@@ -9,6 +9,7 @@
 #+HTML_HEAD: <style> .mmbox {background-color: #BFF2FF; padding: 10px 20px 10px 20px; }</style>
 #+HTML_HEAD: <style>code {background-color: #fff;}</style>
 
+
 * Introducción
 
 El propósito de este módulo es habilitar al usuario a para conectarse a una base de datos
@@ -71,4 +72,157 @@ str(tables)
 ## # Import all tables
 tables <- lapply(tables , dbReadTable, conn = con)
 #+end_src
+
+* Análisis de datos
+Una vez que tenemos acceso a la informaicón, lo que queremos es procesar los datos
+y obtener tablas que podamos leer, gráficos y si es necesario,
+hacer inferencias.
+
+** Ventas 
+
+Este ejemplo usa una tala de ventas mensuales y procedemos a hacer un pronóstico de ventas para las próximas semanas.
+
+#+begin_src R :results output :session timeseries
+library(forecast)
+sales_date <- seq(as.Date('2019-12-01'), by='month',length.out=33)
+price <- sample(x=c(4.50, 4.99, 7.50, 8.99), size = length(sales_date), replace = TRUE)
+promotion <- rbinom(n=length(sales_date), size = 1, p = 0.1)
+temp_sales <- rpois(length(sales_date), lambda = 8300)
+temp_sales <- temp_sales * log(price)
+unit_sales <- floor(temp_sales * (1 + promotion * 0.30))
+#Initialize data frame
+df <- data.frame(sales_date,unit_sales, promotion, price)
+head(df)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+This is forecast 8.18 
+  Want to meet other forecasters? Join the International Institute of Forecasters:
+  http://forecasters.org/
+
+  sales_date unit_sales promotion price
+1 2019-12-01      16739         0  7.50
+2 2020-01-01      13327         0  4.99
+3 2020-02-01      18357         0  8.99
+4 2020-03-01      18144         0  8.99
+5 2020-04-01      16626         0  7.50
+6 2020-05-01      16729         0  7.50
+#+end_example
+
+#+begin_src R :session timeseries
+myts1 <-ts(df$unit_sales, start=c(2019,12), end=c(2022,8), freq = 12)
+plot(myts1, col="darkblue", lwd=2, type="b", pch=19)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :session timeseries
+boxplot(df$unit_sales~ df$promotion, col=c("lightblue","darkorange"))
+#+end_src
+
+#+RESULTS:
+
+
+#+begin_src R :session timeseries
+df$Tots <- df$unit_sales * df$price
+myts2 <-ts(df$Tots, start=c(2019,12), end=c(2023,1), freq = 12)
+plot(myts2, col="darkblue", lwd=2, type="b", pch=19)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src R :session timeseries :results nil
+#myts1 <-ts(df$unit_sales, start=c(2019,12), end=c(2022,8), freq = 12)
+myts <- myts1
+# simple exponential - models level
+# fit <- HoltWinters(myts, beta=FALSE, gamma=FALSE)
+# double exponential - models level and trend
+# fit <- HoltWinters(myts, gamma=FALSE)
+# triple exponential - models level, trend, and seasonal components
+#  fit <- HoltWinters(myts)
+
+# Automated forecasting using an exponential model
+# fit <- ets(myts)
+
+# Automated forecasting using an ARIMA model
+# fit <- auto.arima(myts) 
+
+# ARIMA model
+fit1 <- arima(myts, order=c(0,1,1))
+fit2 <- arima(myts, order=c(4,1,1))
+fit3 <- HoltWinters(myts)
+myforecast1  <- predict(fit1 ,5)
+myforecast2  <- predict(fit2 ,5)
+myforecast3  <- predict(fit3 ,5)
+
+plot_TS_predictions <- function(df, myforecast,...){
+mTS <- df[,2]
+mDATE <- df[,1]
+if(class(myforecast)%in%"list") {PP <- myforecast$pred} else{PP <- as.numeric(myforecast) }
+n_ts <- length(mTS)
+n_ahead <- length(PP)
+JOINT_Y <- c(myts[[n_ts]], PP[1])
+pred_dates <- seq(as.Date(df[,1][n_ts]), by='month',length.out=(n_ahead +1))
+JOINT_X <- pred_dates[1:2]
+pred_dates <- pred_dates[-1]
+
+X <- c(df[,1], pred_dates)
+Y <- c(myts,rep(NA,n_ahead))
+Y2 <- c(rep(NA,n_ts),PP)
+
+plot(X, Y, lty = 1, type = "l", lwd=2, xaxt ="n", xlab="Time", ...)
+lines(X,Y2, col="darkblue", type="b", pch=18, lwd=2)
+lines(JOINT_X,JOINT_Y, col="darkred", type="l", lwd=2)
+# Vertical grid
+axis(1, tck = 1, lty = 2, col = "gray20", labels=FALSE)
+text(x = X, par("usr")[3]*.97, labels = paste(X,' '), srt = 45, pos = 1, xpd = TRUE,cex=.7)
+# Horizontal grid  
+axis(2, tck = 1, lty = 2, col = "gray20")
+}
+
+par(mfrow=c(3,1))
+plot_TS_predictions(df,myforecast1 )
+plot_TS_predictions(df,myforecast2 )
+plot_TS_predictions(df,myforecast3, main="Holt-Winters" , ylab="Value")
+#+end_src
+
+#+RESULTS:
+| 12000 |
+| 14000 |
+| 16000 |
+| 18000 |
+| 20000 |
+| 22000 |
+| 24000 |
+
+
+
+#+begin_src R :session timeseries
+plot_TS <- function(df){
+Y <- df[,2]
+X <- df[,1]
+
+plot(X, Y, lty = 1, type = "l", lwd=2, xaxt ="n", xlab="Date", ylab="Units")
+# Vertical grid
+axis(1, tck = 1, lty = 2, col = "gray20", labels=FALSE)
+text(x = X, par("usr")[3]*.97, labels = paste(X,' '), srt = 45, pos = 1, xpd = TRUE,cex=.7)
+# Horizontal grid  
+axis(2, tck = 1, lty = 2, col = "gray20")
+}
+plot_TS(df)
+#+end_src
+
+#+RESULTS:
+| 12000 |
+| 14000 |
+| 16000 |
+| 18000 |
+| 20000 |
+| 22000 |
+| 24000 |
+
 

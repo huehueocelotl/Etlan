@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-07 Tue 16:50 -->
+<!-- 2023-02-07 Tue 16:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Conectarse a una base de datos con R</title>
@@ -325,17 +325,17 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb18eb49">1. Introducción</a></li>
-<li><a href="#orgde0fd4f">2. Tener acceso a R de manera local.</a>
+<li><a href="#org508ce52">1. Introducción</a></li>
+<li><a href="#org227b009">2. Tener acceso a R de manera local.</a>
 <ul>
-<li><a href="#org477e3eb">2.1. Actividad:</a></li>
+<li><a href="#org9c25a00">2.1. Actividad:</a></li>
 </ul>
 </li>
-<li><a href="#org338244b">3. Credenciales de acceso</a></li>
-<li><a href="#orgf8b77ac">4. Script conector</a></li>
-<li><a href="#orgb023e48">5. Análisis de datos</a>
+<li><a href="#org1695cbd">3. Credenciales de acceso</a></li>
+<li><a href="#orgd3909ae">4. Script conector</a></li>
+<li><a href="#orgf405e18">5. Análisis de datos</a>
 <ul>
-<li><a href="#org7d0e135">5.1. Ventas</a></li>
+<li><a href="#org8de7e3c">5.1. Ventas semanales</a></li>
 </ul>
 </li>
 </ul>
@@ -343,8 +343,8 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-orgb18eb49" class="outline-2">
-<h2 id="orgb18eb49"><span class="section-number-2">1</span> Introducción</h2>
+<div id="outline-container-org508ce52" class="outline-2">
+<h2 id="org508ce52"><span class="section-number-2">1</span> Introducción</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 El propósito de este módulo es habilitar al usuario a para conectarse a una base de datos
@@ -367,8 +367,8 @@ Al finalizar el módulo podrás
 </div>
 
 
-<div id="outline-container-orgde0fd4f" class="outline-2">
-<h2 id="orgde0fd4f"><span class="section-number-2">2</span> Tener acceso a R de manera local.</h2>
+<div id="outline-container-org227b009" class="outline-2">
+<h2 id="org227b009"><span class="section-number-2">2</span> Tener acceso a R de manera local.</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Lo más recomendable es que tengas el programa R instalado en tu computadora (de manrea local).
@@ -377,8 +377,8 @@ servidor en donde la base de datos está alojada, el nombre de usuario y la cont
 </p>
 </div>
 
-<div id="outline-container-org477e3eb" class="outline-3">
-<h3 id="org477e3eb"><span class="section-number-3">2.1</span> Actividad:</h3>
+<div id="outline-container-org9c25a00" class="outline-3">
+<h3 id="org9c25a00"><span class="section-number-3">2.1</span> Actividad:</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>Crea una carpeta de nombre Modulo1</li>
@@ -389,8 +389,8 @@ servidor en donde la base de datos está alojada, el nombre de usuario y la cont
 </div>
 </div>
 
-<div id="outline-container-org338244b" class="outline-2">
-<h2 id="org338244b"><span class="section-number-2">3</span> Credenciales de acceso</h2>
+<div id="outline-container-org1695cbd" class="outline-2">
+<h2 id="org1695cbd"><span class="section-number-2">3</span> Credenciales de acceso</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 El administrador de una base de datos lleva el control de las <b>credenciales de acceso</b> de las personas que pueden accedier a la informaición.
@@ -408,8 +408,8 @@ Estas incluyen:
 </div>
 </div>
 
-<div id="outline-container-orgf8b77ac" class="outline-2">
-<h2 id="orgf8b77ac"><span class="section-number-2">4</span> Script conector</h2>
+<div id="outline-container-orgd3909ae" class="outline-2">
+<h2 id="orgd3909ae"><span class="section-number-2">4</span> Script conector</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 En el archivo de texto escribimos lo siguiente
@@ -440,8 +440,8 @@ tables <span style="color: #0288D1;">&lt;-</span> lapply(tables , dbReadTable, c
 </div>
 </div>
 
-<div id="outline-container-orgb023e48" class="outline-2">
-<h2 id="orgb023e48"><span class="section-number-2">5</span> Análisis de datos</h2>
+<div id="outline-container-orgf405e18" class="outline-2">
+<h2 id="orgf405e18"><span class="section-number-2">5</span> Análisis de datos</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Una vez que tenemos acceso a la informaicón, lo que queremos es procesar los datos
@@ -450,11 +450,11 @@ hacer inferencias.
 </p>
 </div>
 
-<div id="outline-container-org7d0e135" class="outline-3">
-<h3 id="org7d0e135"><span class="section-number-3">5.1</span> Ventas</h3>
+<div id="outline-container-org8de7e3c" class="outline-3">
+<h3 id="org8de7e3c"><span class="section-number-3">5.1</span> Ventas semanales</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
-Este ejemplo usa una tala de ventas mensuales y procedemos a hacer un pronóstico de ventas para las próximas semanas.
+Este ejemplo usa una tala de ventas semanales y procedemos a hacer un pronóstico de ventas para las próximas semanas.
 </p>
 
 <div class="org-src-container">
@@ -569,7 +569,7 @@ plot_TS(df)
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Huehueocélotl</p>
-<p class="date">Created: 2023-02-07 Tue 16:50</p>
+<p class="date">Created: 2023-02-07 Tue 16:36</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
