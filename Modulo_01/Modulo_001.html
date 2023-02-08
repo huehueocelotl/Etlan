@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-07 Tue 16:50 -->
+<!-- 2023-02-08 Wed 12:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Conectarse a una base de datos con R</title>
+<title>Etlan Módulo 1</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Huehueocélotl" />
 <style type="text/css">
@@ -320,31 +320,33 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Conectarse a una base de datos con R</h1>
+<h1 class="title">Etlan Módulo 1</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb18eb49">1. Introducción</a></li>
-<li><a href="#orgde0fd4f">2. Tener acceso a R de manera local.</a>
+<li><a href="#orgdae6691">1. Introducción</a></li>
+<li><a href="#org32817f6">2. Tener acceso a R de manera local.</a>
 <ul>
-<li><a href="#org477e3eb">2.1. Actividad:</a></li>
+<li><a href="#org11bc620">2.1. Actividad:</a></li>
 </ul>
 </li>
-<li><a href="#org338244b">3. Credenciales de acceso</a></li>
-<li><a href="#orgf8b77ac">4. Script conector</a></li>
-<li><a href="#orgb023e48">5. Análisis de datos</a>
+<li><a href="#org51f2087">3. Credenciales de acceso</a></li>
+<li><a href="#orgc5a1782">4. Script conector</a></li>
+<li><a href="#org9d99a22">5. Análisis de datos</a>
 <ul>
-<li><a href="#org7d0e135">5.1. Ventas</a></li>
+<li><a href="#orge03d78b">5.1. Ejemplo: pronóstico de ventas</a></li>
+<li><a href="#org3b3a927">5.2. Actividad</a></li>
 </ul>
 </li>
+<li><a href="#orga9578aa">6. Generación de reportes usando Rmarkdown.</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-orgb18eb49" class="outline-2">
-<h2 id="orgb18eb49"><span class="section-number-2">1</span> Introducción</h2>
+<div id="outline-container-orgdae6691" class="outline-2">
+<h2 id="orgdae6691"><span class="section-number-2">1</span> Introducción</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 El propósito de este módulo es habilitar al usuario a para conectarse a una base de datos
@@ -367,8 +369,8 @@ Al finalizar el módulo podrás
 </div>
 
 
-<div id="outline-container-orgde0fd4f" class="outline-2">
-<h2 id="orgde0fd4f"><span class="section-number-2">2</span> Tener acceso a R de manera local.</h2>
+<div id="outline-container-org32817f6" class="outline-2">
+<h2 id="org32817f6"><span class="section-number-2">2</span> Tener acceso a R de manera local.</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Lo más recomendable es que tengas el programa R instalado en tu computadora (de manrea local).
@@ -377,8 +379,8 @@ servidor en donde la base de datos está alojada, el nombre de usuario y la cont
 </p>
 </div>
 
-<div id="outline-container-org477e3eb" class="outline-3">
-<h3 id="org477e3eb"><span class="section-number-3">2.1</span> Actividad:</h3>
+<div id="outline-container-org11bc620" class="outline-3">
+<h3 id="org11bc620"><span class="section-number-3">2.1</span> Actividad:</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>Crea una carpeta de nombre Modulo1</li>
@@ -389,8 +391,8 @@ servidor en donde la base de datos está alojada, el nombre de usuario y la cont
 </div>
 </div>
 
-<div id="outline-container-org338244b" class="outline-2">
-<h2 id="org338244b"><span class="section-number-2">3</span> Credenciales de acceso</h2>
+<div id="outline-container-org51f2087" class="outline-2">
+<h2 id="org51f2087"><span class="section-number-2">3</span> Credenciales de acceso</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 El administrador de una base de datos lleva el control de las <b>credenciales de acceso</b> de las personas que pueden accedier a la informaición.
@@ -408,8 +410,8 @@ Estas incluyen:
 </div>
 </div>
 
-<div id="outline-container-orgf8b77ac" class="outline-2">
-<h2 id="orgf8b77ac"><span class="section-number-2">4</span> Script conector</h2>
+<div id="outline-container-orgc5a1782" class="outline-2">
+<h2 id="orgc5a1782"><span class="section-number-2">4</span> Script conector</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 En el archivo de texto escribimos lo siguiente
@@ -434,14 +436,19 @@ tables <span style="color: #0288D1;">&lt;-</span> dbListTables(con)
 str(tables)
 
 <span style="color: #795548;">## </span><span style="color: #795548;"># Import all tables</span>
-tables <span style="color: #0288D1;">&lt;-</span> lapply(tables , dbReadTable, conn = con)
+<span style="color: #795548;">#  </span><span style="color: #795548;">tables &lt;- lapply(tables , dbReadTable, conn = con)</span>
+
+<span style="color: #795548;">## </span><span style="color: #795548;">Import to R a table using queries </span>
+res <span style="color: #0288D1;">&lt;-</span> dbSendQuery(con, <span style="color: #6C3082;">"SELECT * FROM tablename"</span>)
+df2 <span style="color: #0288D1;">&lt;-</span> dbFetch(res)
+dbClearResult(res)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb023e48" class="outline-2">
-<h2 id="orgb023e48"><span class="section-number-2">5</span> Análisis de datos</h2>
+<div id="outline-container-org9d99a22" class="outline-2">
+<h2 id="org9d99a22"><span class="section-number-2">5</span> Análisis de datos</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Una vez que tenemos acceso a la informaicón, lo que queremos es procesar los datos
@@ -450,12 +457,13 @@ hacer inferencias.
 </p>
 </div>
 
-<div id="outline-container-org7d0e135" class="outline-3">
-<h3 id="org7d0e135"><span class="section-number-3">5.1</span> Ventas</h3>
+<div id="outline-container-orge03d78b" class="outline-3">
+<h3 id="orge03d78b"><span class="section-number-3">5.1</span> Ejemplo: pronóstico de ventas</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
-Este ejemplo usa una tala de ventas mensuales y procedemos a hacer un pronóstico de ventas para las próximas semanas.
+Este ejemplo usa una tala de ventas mensuales y procedemos a hacer un pronóstico de ventas para los próximos meses.
 </p>
+
 
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #0288D1;">library</span>(forecast)
@@ -471,18 +479,29 @@ head(df)
 </pre>
 </div>
 
+<p>
+Lo más simple que podemos hacer es definir los datos como una serie de tiempo y 
+hacer un plot sencillo:
+</p>
 <div class="org-src-container">
 <pre class="src src-R">myts1 <span style="color: #0288D1;">&lt;-</span>ts(df$unit_sales, start=c(2019,12), end=c(2022,8), freq = 12)
 plot(myts1, col=<span style="color: #6C3082;">"darkblue"</span>, lwd=2, type=<span style="color: #6C3082;">"b"</span>, pch=19)
 </pre>
 </div>
 
+<p>
+Para saber cuál es la influencia de campañas de promoción en las unidades
+vendidas, podemos hacer un boxplot como el  siguiente:
+</p>
 <div class="org-src-container">
 <pre class="src src-R">boxplot(df$unit_sales~ df$promotion, col=c(<span style="color: #6C3082;">"lightblue"</span>,<span style="color: #6C3082;">"darkorange"</span>))
 </pre>
 </div>
 
-
+<p>
+También podemos hacer manipulaciones aritméticas para saber las ventas en 
+montos económicos.
+</p>
 <div class="org-src-container">
 <pre class="src src-R">df$Tots <span style="color: #0288D1;">&lt;-</span> df$unit_sales * df$price
 myts2 <span style="color: #0288D1;">&lt;-</span>ts(df$Tots, start=c(2019,12), end=c(2023,1), freq = 12)
@@ -490,15 +509,34 @@ plot(myts2, col=<span style="color: #6C3082;">"darkblue"</span>, lwd=2, type=<sp
 </pre>
 </div>
 
+<p>
+En este ejemplo, haremos un pronóstico de ventas a 5 meses.
+Lo más empleado es hacer un análisis de tipo Holt-Winters.
+</p>
+
+<p>
+Otro conjunto de herramientas para el análisis de series de tiempo,
+son los modelos auto-regresivos ARMA/ARIMA. 
+</p>
+
+<p>
+A continuación, implementaremos un pronóstico usando un 
+<i>suavizamiento exponencial triple</i> de tipo Holt-Winters.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #795548;">#</span><span style="color: #795548;">myts1 &lt;-ts(df$unit_sales, start=c(2019,12), end=c(2022,8), freq = 12)</span>
 myts <span style="color: #0288D1;">&lt;-</span> myts1
+
+<span style="color: #795548;">#  </span><span style="color: #795548;">Holt-Winter models:</span>
+
 <span style="color: #795548;"># </span><span style="color: #795548;">simple exponential - models level</span>
 <span style="color: #795548;"># </span><span style="color: #795548;">fit &lt;- HoltWinters(myts, beta=FALSE, gamma=FALSE)</span>
 <span style="color: #795548;"># </span><span style="color: #795548;">double exponential - models level and trend</span>
 <span style="color: #795548;"># </span><span style="color: #795548;">fit &lt;- HoltWinters(myts, gamma=FALSE)</span>
 <span style="color: #795548;"># </span><span style="color: #795548;">triple exponential - models level, trend, and seasonal components</span>
-<span style="color: #795548;">#  </span><span style="color: #795548;">fit &lt;- HoltWinters(myts)</span>
+<span style="color: #795548;"># </span><span style="color: #795548;">fit &lt;- HoltWinters(myts)</span>
+
 
 <span style="color: #795548;"># </span><span style="color: #795548;">Automated forecasting using an exponential model</span>
 <span style="color: #795548;"># </span><span style="color: #795548;">fit &lt;- ets(myts)</span>
@@ -506,7 +544,11 @@ myts <span style="color: #0288D1;">&lt;-</span> myts1
 <span style="color: #795548;"># </span><span style="color: #795548;">Automated forecasting using an ARIMA model</span>
 <span style="color: #795548;"># </span><span style="color: #795548;">fit &lt;- auto.arima(myts) </span>
 
-<span style="color: #795548;"># </span><span style="color: #795548;">ARIMA model</span>
+<span style="color: #795548;"># </span><span style="color: #795548;">ARIMA models</span>
+<span style="color: #795548;"># </span><span style="color: #795548;">fit &lt;- arima(myts, order=c(0,1,1))</span>
+<span style="color: #795548;"># </span><span style="color: #795548;">fit &lt;- arima(myts, order=c(4,1,1))</span>
+
+<span style="color: #795548;"># </span><span style="color: #795548;">In this example we will compare three different models:</span>
 fit1 <span style="color: #0288D1;">&lt;-</span> arima(myts, order=c(0,1,1))
 fit2 <span style="color: #0288D1;">&lt;-</span> arima(myts, order=c(4,1,1))
 fit3 <span style="color: #0288D1;">&lt;-</span> HoltWinters(myts)
@@ -514,22 +556,27 @@ myforecast1  <span style="color: #0288D1;">&lt;-</span> predict(fit1 ,5)
 myforecast2  <span style="color: #0288D1;">&lt;-</span> predict(fit2 ,5)
 myforecast3  <span style="color: #0288D1;">&lt;-</span> predict(fit3 ,5)
 
+<span style="color: #795548;">## </span><span style="color: #795548;">Warning: We are assuming that our data frame df contains</span>
+<span style="color: #795548;">## </span><span style="color: #795548;">dates in the first columns</span>
+<span style="color: #795548;">## </span><span style="color: #795548;">values of the time series in the second column</span>
+
 <span style="color: #388E3C;">plot_TS_predictions</span> <span style="color: #0288D1;">&lt;-</span> <span style="color: #bf360c;">function</span>(df, myforecast,...){
 mTS <span style="color: #0288D1;">&lt;-</span> df[,2]
 mDATE <span style="color: #0288D1;">&lt;-</span> df[,1]
 <span style="color: #bf360c;">if</span>(class(myforecast)<span style="color: #0288D1;">%in%</span><span style="color: #6C3082;">"list"</span>) {PP <span style="color: #0288D1;">&lt;-</span> myforecast$pred} <span style="color: #bf360c;">else</span>{PP <span style="color: #0288D1;">&lt;-</span> as.numeric(myforecast) }
 n_ts <span style="color: #0288D1;">&lt;-</span> length(mTS)
 n_ahead <span style="color: #0288D1;">&lt;-</span> length(PP)
-JOINT_Y <span style="color: #0288D1;">&lt;-</span> c(myts[[n_ts]], PP[1])
+JOINT_Y <span style="color: #0288D1;">&lt;-</span> c(mTS[[n_ts]], PP[1])
 pred_dates <span style="color: #0288D1;">&lt;-</span> seq(as.Date(df[,1][n_ts]), by=<span style="color: #6C3082;">'month'</span>,length.out=(n_ahead +1))
 JOINT_X <span style="color: #0288D1;">&lt;-</span> pred_dates[1:2]
 pred_dates <span style="color: #0288D1;">&lt;-</span> pred_dates[-1]
 
 X <span style="color: #0288D1;">&lt;-</span> c(df[,1], pred_dates)
-Y <span style="color: #0288D1;">&lt;-</span> c(myts,rep(<span style="color: #3f51b5;">NA</span>,n_ahead))
+Y <span style="color: #0288D1;">&lt;-</span> c(mTS,rep(<span style="color: #3f51b5;">NA</span>,n_ahead))
 Y2 <span style="color: #0288D1;">&lt;-</span> c(rep(<span style="color: #3f51b5;">NA</span>,n_ts),PP)
+YLIM <span style="color: #0288D1;">&lt;-</span> c(min(Y,Y2,na.rm=<span style="color: #3f51b5;">TRUE</span>),max(Y,Y2,na.rm=<span style="color: #3f51b5;">TRUE</span>))
 
-plot(X, Y, lty = 1, type = <span style="color: #6C3082;">"l"</span>, lwd=2, xaxt =<span style="color: #6C3082;">"n"</span>, xlab=<span style="color: #6C3082;">"Time"</span>, ...)
+plot(X, Y, lty = 1, type = <span style="color: #6C3082;">"l"</span>, lwd=2, xaxt =<span style="color: #6C3082;">"n"</span>, xlab=<span style="color: #6C3082;">"Time"</span>,ylim=YLIM, ...)
 lines(X,Y2, col=<span style="color: #6C3082;">"darkblue"</span>, type=<span style="color: #6C3082;">"b"</span>, pch=18, lwd=2)
 lines(JOINT_X,JOINT_Y, col=<span style="color: #6C3082;">"darkred"</span>, type=<span style="color: #6C3082;">"l"</span>, lwd=2)
 <span style="color: #795548;"># </span><span style="color: #795548;">Vertical grid</span>
@@ -540,14 +587,15 @@ axis(2, tck = 1, lty = 2, col = <span style="color: #6C3082;">"gray20"</span>)
 }
 
 <span style="color: #0288D1;">par</span>(mfrow=c(3,1))
-plot_TS_predictions(df,myforecast1 )
-plot_TS_predictions(df,myforecast2 )
+plot_TS_predictions(df,myforecast1, main= <span style="color: #6C3082;">"ARIMA(0,1,1)"</span>)
+plot_TS_predictions(df,myforecast2, main= <span style="color: #6C3082;">"ARIMA(4,1,1)"</span>)
 plot_TS_predictions(df,myforecast3, main=<span style="color: #6C3082;">"Holt-Winters"</span> , ylab=<span style="color: #6C3082;">"Value"</span>)
 </pre>
 </div>
 
-
-
+<p>
+Here an improved version of a quick plot for a time series:
+</p>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #388E3C;">plot_TS</span> <span style="color: #0288D1;">&lt;-</span> <span style="color: #bf360c;">function</span>(df){
 Y <span style="color: #0288D1;">&lt;-</span> df[,2]
@@ -563,13 +611,67 @@ axis(2, tck = 1, lty = 2, col = <span style="color: #6C3082;">"gray20"</span>)
 plot_TS(df)
 </pre>
 </div>
+
+
+<p>
+Volviendo a las predicciones que hemos hecho, nos enfocamos al modelo
+Holt-winters, pero ahora agregamos los intervalos de confianza:
+</p>
+<div class="org-src-container">
+<pre class="src src-R">myforecast3  <span style="color: #0288D1;">&lt;-</span> predict(fit3 ,5, prediction.interval = <span style="color: #3f51b5;">TRUE</span>)
+</pre>
+</div>
+
+
+<p>
+Ahora tenemos todos los elementos para realizar un reporte
+que incluya nuestras predicciones.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3b3a927" class="outline-3">
+<h3 id="org3b3a927"><span class="section-number-3">5.2</span> Actividad</h3>
+<div class="outline-text-3" id="text-5-2">
+<ul class="org-ul">
+<li>Crear un archivo <code>misfunciones.R</code> dentro de la carpeta Modulo01 que
+incluya las funciones <code>plot_TS</code> y <code>plot_TS_predictions</code>
+implementadas en esta sección.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga9578aa" class="outline-2">
+<h2 id="orga9578aa"><span class="section-number-2">6</span> Generación de reportes usando Rmarkdown.</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Finalmente haremos una plantilla en Rmarkdown para 
+presentar los resultados de nuestro análisis.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #795548;">## </span><span style="color: #795548;">Plantilla para reporte de ventas</span>
+<span style="color: #795548;">## </span><span style="color: #795548;">nombre del archivo: mireporte1.Rmd</span>
+---
+title: Reporte mensual de ventas
+author: Departamento de monitoreo
+output: <span style="color: #6C3082;">"html_document"</span>
+---
+
+<span style="color: #795548;"># </span><span style="color: #795548;">Serie de ventas</span>
+
+<span style="color: #795548;"># </span><span style="color: #795548;">Predicciones</span>
+
+<span style="color: #795548;"># </span><span style="color: #795548;">Gr&#225;ficas</span>
+</pre>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Huehueocélotl</p>
-<p class="date">Created: 2023-02-07 Tue 16:50</p>
+<p class="date">Created: 2023-02-08 Wed 12:00</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

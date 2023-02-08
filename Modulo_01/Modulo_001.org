@@ -1,5 +1,5 @@
 #+author: Huehueocélotl
-#+title: Conectarse a una base de datos con R
+#+title: Etlan Módulo 1
 
 #+INFOJS_OPT: view:info toc:nil
 #+HTML_HEAD: <style>
@@ -70,7 +70,12 @@ tables <- dbListTables(con)
 str(tables)
 
 ## # Import all tables
-tables <- lapply(tables , dbReadTable, conn = con)
+#  tables <- lapply(tables , dbReadTable, conn = con)
+
+## Import to R a table using queries 
+res <- dbSendQuery(con, "SELECT * FROM tablename")
+df2 <- dbFetch(res)
+dbClearResult(res)
 #+end_src
 
 * Análisis de datos
@@ -78,9 +83,10 @@ Una vez que tenemos acceso a la informaicón, lo que queremos es procesar los da
 y obtener tablas que podamos leer, gráficos y si es necesario,
 hacer inferencias.
 
-** Ventas 
+** Ejemplo: pronóstico de ventas 
 
-Este ejemplo usa una tala de ventas mensuales y procedemos a hacer un pronóstico de ventas para las próximas semanas.
+Este ejemplo usa una tala de ventas mensuales y procedemos a hacer un pronóstico de ventas para los próximos meses.
+
 
 #+begin_src R :results output :session timeseries
 library(forecast)
@@ -99,20 +105,19 @@ head(df)
 #+begin_example
 Registered S3 method overwritten by 'quantmod':
   method            from
-  as.zoo.data.frame zoo 
-This is forecast 8.18 
-  Want to meet other forecasters? Join the International Institute of Forecasters:
-  http://forecasters.org/
+  as.zoo.data.frame zoo
 
   sales_date unit_sales promotion price
-1 2019-12-01      16739         0  7.50
-2 2020-01-01      13327         0  4.99
-3 2020-02-01      18357         0  8.99
-4 2020-03-01      18144         0  8.99
-5 2020-04-01      16626         0  7.50
-6 2020-05-01      16729         0  7.50
+1 2019-12-01      13256         0  4.99
+2 2020-01-01      12519         0  4.50
+3 2020-02-01      16713         0  7.50
+4 2020-03-01      12476         0  4.50
+5 2020-04-01      12392         0  4.50
+6 2020-05-01      12534         0  4.50
 #+end_example
 
+Lo más simple que podemos hacer es definir los datos como una serie de tiempo y 
+hacer un plot sencillo:
 #+begin_src R :session timeseries
 myts1 <-ts(df$unit_sales, start=c(2019,12), end=c(2022,8), freq = 12)
 plot(myts1, col="darkblue", lwd=2, type="b", pch=19)
@@ -120,13 +125,16 @@ plot(myts1, col="darkblue", lwd=2, type="b", pch=19)
 
 #+RESULTS:
 
+Para saber cuál es la influencia de campañas de promoción en las unidades
+vendidas, podemos hacer un boxplot como el  siguiente:
 #+begin_src R :session timeseries
 boxplot(df$unit_sales~ df$promotion, col=c("lightblue","darkorange"))
 #+end_src
 
 #+RESULTS:
 
-
+También podemos hacer manipulaciones aritméticas para saber las ventas en 
+montos económicos.
 #+begin_src R :session timeseries
 df$Tots <- df$unit_sales * df$price
 myts2 <-ts(df$Tots, start=c(2019,12), end=c(2023,1), freq = 12)
@@ -135,15 +143,28 @@ plot(myts2, col="darkblue", lwd=2, type="b", pch=19)
 
 #+RESULTS:
 
+En este ejemplo, haremos un pronóstico de ventas a 5 meses.
+Lo más empleado es hacer un análisis de tipo Holt-Winters.
+
+Otro conjunto de herramientas para el análisis de series de tiempo,
+son los modelos auto-regresivos ARMA/ARIMA. 
+
+A continuación, implementaremos un pronóstico usando un 
+/suavizamiento exponencial triple/ de tipo Holt-Winters.
+
 #+begin_src R :session timeseries :results nil
 #myts1 <-ts(df$unit_sales, start=c(2019,12), end=c(2022,8), freq = 12)
 myts <- myts1
+
+#  Holt-Winter models:
+
 # simple exponential - models level
 # fit <- HoltWinters(myts, beta=FALSE, gamma=FALSE)
 # double exponential - models level and trend
 # fit <- HoltWinters(myts, gamma=FALSE)
 # triple exponential - models level, trend, and seasonal components
-#  fit <- HoltWinters(myts)
+# fit <- HoltWinters(myts)
+
 
 # Automated forecasting using an exponential model
 # fit <- ets(myts)
@@ -151,7 +172,11 @@ myts <- myts1
 # Automated forecasting using an ARIMA model
 # fit <- auto.arima(myts) 
 
-# ARIMA model
+# ARIMA models
+# fit <- arima(myts, order=c(0,1,1))
+# fit <- arima(myts, order=c(4,1,1))
+
+# In this example we will compare three different models:
 fit1 <- arima(myts, order=c(0,1,1))
 fit2 <- arima(myts, order=c(4,1,1))
 fit3 <- HoltWinters(myts)
@@ -159,22 +184,27 @@ myforecast1  <- predict(fit1 ,5)
 myforecast2  <- predict(fit2 ,5)
 myforecast3  <- predict(fit3 ,5)
 
+## Warning: We are assuming that our data frame df contains
+## dates in the first columns
+## values of the time series in the second column
+
 plot_TS_predictions <- function(df, myforecast,...){
 mTS <- df[,2]
 mDATE <- df[,1]
 if(class(myforecast)%in%"list") {PP <- myforecast$pred} else{PP <- as.numeric(myforecast) }
 n_ts <- length(mTS)
 n_ahead <- length(PP)
-JOINT_Y <- c(myts[[n_ts]], PP[1])
+JOINT_Y <- c(mTS[[n_ts]], PP[1])
 pred_dates <- seq(as.Date(df[,1][n_ts]), by='month',length.out=(n_ahead +1))
 JOINT_X <- pred_dates[1:2]
 pred_dates <- pred_dates[-1]
 
 X <- c(df[,1], pred_dates)
-Y <- c(myts,rep(NA,n_ahead))
+Y <- c(mTS,rep(NA,n_ahead))
 Y2 <- c(rep(NA,n_ts),PP)
+YLIM <- c(min(Y,Y2,na.rm=TRUE),max(Y,Y2,na.rm=TRUE))
 
-plot(X, Y, lty = 1, type = "l", lwd=2, xaxt ="n", xlab="Time", ...)
+plot(X, Y, lty = 1, type = "l", lwd=2, xaxt ="n", xlab="Time",ylim=YLIM, ...)
 lines(X,Y2, col="darkblue", type="b", pch=18, lwd=2)
 lines(JOINT_X,JOINT_Y, col="darkred", type="l", lwd=2)
 # Vertical grid
@@ -185,22 +215,21 @@ axis(2, tck = 1, lty = 2, col = "gray20")
 }
 
 par(mfrow=c(3,1))
-plot_TS_predictions(df,myforecast1 )
-plot_TS_predictions(df,myforecast2 )
+plot_TS_predictions(df,myforecast1, main= "ARIMA(0,1,1)")
+plot_TS_predictions(df,myforecast2, main= "ARIMA(4,1,1)")
 plot_TS_predictions(df,myforecast3, main="Holt-Winters" , ylab="Value")
 #+end_src
 
 #+RESULTS:
 | 12000 |
+| 13000 |
 | 14000 |
+| 15000 |
 | 16000 |
+| 17000 |
 | 18000 |
-| 20000 |
-| 22000 |
-| 24000 |
 
-
-
+Here an improved version of a quick plot for a time series:
 #+begin_src R :session timeseries
 plot_TS <- function(df){
 Y <- df[,2]
@@ -226,3 +255,46 @@ plot_TS(df)
 | 24000 |
 
 
+Volviendo a las predicciones que hemos hecho, nos enfocamos al modelo
+Holt-winters, pero ahora agregamos los intervalos de confianza:
+#+begin_src R :session timeseries
+myforecast3  <- predict(fit3 ,5, prediction.interval = TRUE)
+#+end_src
+
+#+RESULTS:
+| 16183.5137827381 | 21407.5012745915 | 10959.5262908847 |
+| 16799.4227532291 | 22098.9842669352 |  11499.861239523 |
+|  18412.089483502 | 23786.1623486638 | 13038.0166183402 |
+| 13040.9584189171 | 18488.5235706691 | 7593.39326716511 |
+| 17348.5474749935 | 22868.6265509757 | 11828.4683990113 |
+
+
+Ahora tenemos todos los elementos para realizar un reporte
+que incluya nuestras predicciones.
+
+** Actividad
+
++ Crear un archivo ~misfunciones.R~ dentro de la carpeta Modulo01 que
+  incluya las funciones =plot_TS= y =plot_TS_predictions=
+  implementadas en esta sección.
+
+* Generación de reportes usando Rmarkdown.
+
+Finalmente haremos una plantilla en Rmarkdown para 
+presentar los resultados de nuestro análisis.
+
+#+begin_src R
+## Plantilla para reporte de ventas
+## nombre del archivo: mireporte1.Rmd
+---
+title: Reporte mensual de ventas
+author: Departamento de monitoreo
+output: "html_document"
+---
+
+# Serie de ventas
+
+# Predicciones
+
+# Gráficas
+#+end_src
