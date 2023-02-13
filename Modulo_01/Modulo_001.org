@@ -34,12 +34,12 @@ servidor en donde la base de datos está alojada, el nombre de usuario y la cont
 ** Actividad:
 
 + Crea una carpeta de nombre Modulo1
-+ Crea un arcivo de texto ~conector.R~
-+ Inicia una sesion de R con el directorio de trabajo Modulo1.
++ Crea un archivo de texto ~conector.R~
++ Inicia una sesión de R con el directorio de trabajo Modulo1.
 
 * Credenciales de acceso
 
-El administrador de una base de datos lleva el control de las *credenciales de acceso* de las personas que pueden accedier a la informaición.
+El administrador de una base de datos lleva el control de las *credenciales de acceso* de las personas que pueden acceder a la informaición.
 Estas incluyen:
 + nombre de usuario
 + contraseñas
@@ -49,7 +49,7 @@ Estas incluyen:
 
 * Script conector
 
-En el archivo de texto escribimos lo siguiente
+En el archivo de texto ~conector.R~, escribimos lo siguiente:
 
 #+begin_src R :results nil
 library(DBI)
@@ -229,7 +229,7 @@ plot_TS_predictions(df,myforecast3, main="Holt-Winters" , ylab="Value")
 | 17000 |
 | 18000 |
 
-Here an improved version of a quick plot for a time series:
+A continuación, presentamos una versión mejorada para hacer un plot rápido y sencillo de una serie temporal:
 #+begin_src R :session timeseries
 plot_TS <- function(df){
 Y <- df[,2]
@@ -298,3 +298,19 @@ output: "html_document"
 
 # Gráficas
 #+end_src
+
+
+** Pedazos de código
+
+En un archivo Rmarkdown podemos incluir texto y pedazos de código.
+
+Las salidas (o resultados) de pedazos de código  output pueden ser configurados usando opciones de tipo ~knitr~,
+cuyos argumentos son colocados dentro de llaves ~{}~  colocado dentro del encabezado de un pedazo de código.
+
+1) ~include = FALSE~ Con esta opción, el código es ejecutado, sin embargo no se muestra ni el código, ni el resultado.
+2) ~echo = FALSE~ Con esta opción se muestra el resultado de ejecutat el código, pero el propio c;odigo queda oculto.
+3) ~message = FALSE~ Calquier otro mensaje producido por la ejecución del código queda oculto.
+4) ~warning = FALSE~ Calquier otro mensaje de /advertencia/ producido por la ejecución del código queda oculto.
+5) ~fig.cap = "..."~ Agrega un pie de imagen para cualquier resultado gráfico.
+
+
