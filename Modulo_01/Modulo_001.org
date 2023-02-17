@@ -10,6 +10,7 @@
 #+HTML_HEAD: <style>code {background-color: #fff;}</style>
 
 
+
 * Introducción
 
 El propósito de este módulo es habilitar al usuario a para conectarse a una base de datos
@@ -314,3 +315,54 @@ cuyos argumentos son colocados dentro de llaves ~{}~  colocado dentro del encabe
 5) ~fig.cap = "..."~ Agrega un pie de imagen para cualquier resultado gráfico.
 
 
+* Crear un reporte en excel
+
+A continuación, mostraremos cómo crear un documento en
+excel. Para esto, primero necesitamos conectarnos a la base de datos. Agruparemos
+la información de ventas por cada año usando queries de tipo SQL.
+Necesitamos también una librería especial en R llamada
+=openxlsx=, la cual tiene la ventaja de que no tiene 
+dependencias con Java.
+
+#+begin_src R :results nil
+## Output file: reporte2.xlsx
+library(DBI)
+library(RMariaDB)
+source(conector.R)
+
+anual <- dbGetQuery(con, "SELECT SUM(unit_sales) AS VENTAS,DATE_FORMAT(sales_date, '%Y') AS AÑO FROM ventas GROUP BY DATE_FORMAT(sales_date, '%Y') ORDER BY sales_date  ASC")
+dbDisconnect(con)
+
+library(openxlsx)
+
+wb <- createWorkbook()
+addWorksheet(wb, sheetName = "REPORTE")
+ts <- createStyle(
+  fontColour = "#0869ca", fontSize = 14, halign = 'center', textDecoration = 'bold',
+  fontName = "DejaVu Sans Mono", fgFill = "#d2d8dd"
+)
+mergeCells(wb, 1, cols = 1:2, rows = 1)
+addStyle(wb, sheet = 1, ts, rows = 1, cols = 1, gridExpand = TRUE)
+writeData(wb, 1, x = "Reporte de Ventas", startRow = 1, startCol = 1)
+sts <- createStyle(
+  fontColour = "#121314", fontSize = 13, halign = 'center', textDecoration = 'italic',
+  fontName = "DejaVu Sans Mono"
+)
+mergeCells(wb, 1, cols = 1:2, rows = 2)
+addStyle(wb, sheet = 1, sts, rows = 2, cols = 1, gridExpand = TRUE)
+writeData(wb, 1, x = "Reporte Anual", startRow = 2, startCol = 1)
+hs <- createStyle( fontColour = "#FFFFFF", fontSize = 12, fontName = "DejaVu Sans Mono", fgFill = "#4F80BD")
+addStyle(wb, sheet = 1, hs, rows = 3, cols = 1:2,gridExpand = TRUE)
+bs <- createStyle(border = c("top", "bottom", "left", "right"), borderColour = "#4F81BD", borderStyle = "thick", fontSize = 10, fontName = "DejaVu Sans Mono")
+addStyle(wb, sheet = 1, bs, rows = 4:7, cols = 1:2, gridExpand = TRUE)
+addFilter(wb, 1, row = 3, cols = 1:ncol(anual))
+writeDataTable(wb, 1, x = anual, withFilter = TRUE, startRow = 3,  startCol = 1)  ###, tableStyle = "TableStyleMedium21" )
+ms <- createStyle(fontColour = "#37cd30")
+conditionalFormatting(wb, 1,
+                      cols = 1,
+                      rows = 4:7, rule = ">150000", style = ms
+)
+writeData(wb, 1, x = "*Los valores mayores a 150,000 se resaltan", startRow = 8, startCol = 1)
+setColWidths(wb, sheet = 1, cols = 1:2,widths = "auto")
+saveWorkbook(wb, file = "reporte2.xlsx", overwrite = TRUE)
+#+end_src

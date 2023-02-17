@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-13 Mon 09:57 -->
+<!-- 2023-02-17 Fri 12:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Etlan Módulo 1</title>
@@ -199,6 +199,7 @@ body { background: #a2d2ff; max-width: 768px; margin: 20px auto; color:#003049 ;
 <style> pre.src { overflow: auto; background: #edede9 }</style>
 <style> .mmbox {background-color: #BFF2FF; padding: 10px 20px 10px 20px; }</style>
 <style>code {background-color: #fff;}</style>
+<style>example {background-color: #fff;}</style>
 
 <script type="text/javascript" src="https://orgmode.org/org-info.js">
 /**
@@ -325,28 +326,33 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orge2263a9">1. Introducción</a></li>
-<li><a href="#org61cf1f8">2. Tener acceso a R de manera local.</a>
+<li><a href="#orgab7c7a4">1. Introducción</a></li>
+<li><a href="#orgf3d733c">2. Tener acceso a R de manera local.</a>
 <ul>
-<li><a href="#org9e64b4f">2.1. Actividad:</a></li>
+<li><a href="#org386f7a2">2.1. Actividad:</a></li>
 </ul>
 </li>
-<li><a href="#orgaca3c64">3. Credenciales de acceso</a></li>
-<li><a href="#org1ca410c">4. Script conector</a></li>
-<li><a href="#orgc905e39">5. Análisis de datos</a>
+<li><a href="#org8544f87">3. Credenciales de acceso</a></li>
+<li><a href="#org02aaaf5">4. Script conector</a></li>
+<li><a href="#org97699e1">5. Análisis de datos</a>
 <ul>
-<li><a href="#org2d6fff0">5.1. Ejemplo: pronóstico de ventas</a></li>
-<li><a href="#org1841cce">5.2. Actividad</a></li>
+<li><a href="#org08c8e9c">5.1. Ejemplo: pronóstico de ventas</a></li>
+<li><a href="#orge9a960a">5.2. Actividad</a></li>
 </ul>
 </li>
-<li><a href="#org08475c1">6. Generación de reportes usando Rmarkdown.</a></li>
+<li><a href="#orgcb000a0">6. Generación de reportes usando Rmarkdown.</a>
+<ul>
+<li><a href="#org76c6b82">6.1. Pedazos de código</a></li>
+</ul>
+</li>
+<li><a href="#org88dfe3f">7. Crear un reporte en excel</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-orge2263a9" class="outline-2">
-<h2 id="orge2263a9"><span class="section-number-2">1</span> Introducción</h2>
+<div id="outline-container-orgab7c7a4" class="outline-2">
+<h2 id="orgab7c7a4"><span class="section-number-2">1</span> Introducción</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 El propósito de este módulo es habilitar al usuario a para conectarse a una base de datos
@@ -369,8 +375,8 @@ Al finalizar el módulo podrás
 </div>
 
 
-<div id="outline-container-org61cf1f8" class="outline-2">
-<h2 id="org61cf1f8"><span class="section-number-2">2</span> Tener acceso a R de manera local.</h2>
+<div id="outline-container-orgf3d733c" class="outline-2">
+<h2 id="orgf3d733c"><span class="section-number-2">2</span> Tener acceso a R de manera local.</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Lo más recomendable es que tengas el programa R instalado en tu computadora (de manrea local).
@@ -379,8 +385,8 @@ servidor en donde la base de datos está alojada, el nombre de usuario y la cont
 </p>
 </div>
 
-<div id="outline-container-org9e64b4f" class="outline-3">
-<h3 id="org9e64b4f"><span class="section-number-3">2.1</span> Actividad:</h3>
+<div id="outline-container-org386f7a2" class="outline-3">
+<h3 id="org386f7a2"><span class="section-number-3">2.1</span> Actividad:</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>Crea una carpeta de nombre Modulo1</li>
@@ -391,11 +397,11 @@ servidor en donde la base de datos está alojada, el nombre de usuario y la cont
 </div>
 </div>
 
-<div id="outline-container-orgaca3c64" class="outline-2">
-<h2 id="orgaca3c64"><span class="section-number-2">3</span> Credenciales de acceso</h2>
+<div id="outline-container-org8544f87" class="outline-2">
+<h2 id="org8544f87"><span class="section-number-2">3</span> Credenciales de acceso</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-El administrador de una base de datos lleva el control de las <b>credenciales de acceso</b> de las personas que pueden accedier a la informaición.
+El administrador de una base de datos lleva el control de las <b>credenciales de acceso</b> de las personas que pueden acceder a la informaición.
 Estas incluyen:
 </p>
 <ul class="org-ul">
@@ -410,11 +416,11 @@ Estas incluyen:
 </div>
 </div>
 
-<div id="outline-container-org1ca410c" class="outline-2">
-<h2 id="org1ca410c"><span class="section-number-2">4</span> Script conector</h2>
+<div id="outline-container-org02aaaf5" class="outline-2">
+<h2 id="org02aaaf5"><span class="section-number-2">4</span> Script conector</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-En el archivo de texto escribimos lo siguiente
+En el archivo de texto <code>conector.R</code>, escribimos lo siguiente:
 </p>
 
 <div class="org-src-container">
@@ -447,8 +453,8 @@ dbClearResult(res)
 </div>
 </div>
 
-<div id="outline-container-orgc905e39" class="outline-2">
-<h2 id="orgc905e39"><span class="section-number-2">5</span> Análisis de datos</h2>
+<div id="outline-container-org97699e1" class="outline-2">
+<h2 id="org97699e1"><span class="section-number-2">5</span> Análisis de datos</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Una vez que tenemos acceso a la informaicón, lo que queremos es procesar los datos
@@ -457,8 +463,8 @@ hacer inferencias.
 </p>
 </div>
 
-<div id="outline-container-org2d6fff0" class="outline-3">
-<h3 id="org2d6fff0"><span class="section-number-3">5.1</span> Ejemplo: pronóstico de ventas</h3>
+<div id="outline-container-org08c8e9c" class="outline-3">
+<h3 id="org08c8e9c"><span class="section-number-3">5.1</span> Ejemplo: pronóstico de ventas</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Este ejemplo usa una tala de ventas mensuales y procedemos a hacer un pronóstico de ventas para los próximos meses.
@@ -594,7 +600,7 @@ plot_TS_predictions(df,myforecast3, main=<span style="color: #ffa07a;">"Holt-Win
 </div>
 
 <p>
-Here an improved version of a quick plot for a time series:
+A continuación, presentamos una versión mejorada para hacer un plot rápido y sencillo de una serie temporal:
 </p>
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #00ff7f;">plot_TS</span> <span style="color: #1e90ff;">&lt;-</span> <span style="color: #20b2aa; font-weight: bold;">function</span>(df){
@@ -630,8 +636,8 @@ que incluya nuestras predicciones.
 </div>
 </div>
 
-<div id="outline-container-org1841cce" class="outline-3">
-<h3 id="org1841cce"><span class="section-number-3">5.2</span> Actividad</h3>
+<div id="outline-container-orge9a960a" class="outline-3">
+<h3 id="orge9a960a"><span class="section-number-3">5.2</span> Actividad</h3>
 <div class="outline-text-3" id="text-5-2">
 <ul class="org-ul">
 <li>Crear un archivo <code>misfunciones.R</code> dentro de la carpeta Modulo01 que
@@ -642,8 +648,8 @@ implementadas en esta sección.</li>
 </div>
 </div>
 
-<div id="outline-container-org08475c1" class="outline-2">
-<h2 id="org08475c1"><span class="section-number-2">6</span> Generación de reportes usando Rmarkdown.</h2>
+<div id="outline-container-orgcb000a0" class="outline-2">
+<h2 id="orgcb000a0"><span class="section-number-2">6</span> Generación de reportes usando Rmarkdown.</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Finalmente haremos una plantilla en Rmarkdown para 
@@ -667,11 +673,92 @@ output: <span style="color: #ffa07a;">"html_document"</span>
 </pre>
 </div>
 </div>
+
+
+<div id="outline-container-org76c6b82" class="outline-3">
+<h3 id="org76c6b82"><span class="section-number-3">6.1</span> Pedazos de código</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+En un archivo Rmarkdown podemos incluir texto y pedazos de código.
+</p>
+
+<p>
+Las salidas (o resultados) de pedazos de código  output pueden ser configurados usando opciones de tipo <code>knitr</code>,
+cuyos argumentos son colocados dentro de llaves <code>{}</code>  colocado dentro del encabezado de un pedazo de código.
+</p>
+
+<ol class="org-ol">
+<li><code>include = FALSE</code> Con esta opción, el código es ejecutado, sin embargo no se muestra ni el código, ni el resultado.</li>
+<li><code>echo = FALSE</code> Con esta opción se muestra el resultado de ejecutat el código, pero el propio c;odigo queda oculto.</li>
+<li><code>message = FALSE</code> Calquier otro mensaje producido por la ejecución del código queda oculto.</li>
+<li><code>warning = FALSE</code> Calquier otro mensaje de <i>advertencia</i> producido por la ejecución del código queda oculto.</li>
+<li><code>fig.cap = "..."</code> Agrega un pie de imagen para cualquier resultado gráfico.</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org88dfe3f" class="outline-2">
+<h2 id="org88dfe3f"><span class="section-number-2">7</span> Crear un reporte en excel</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+A continuación, mostraremos cómo crear un documento en
+excel. Para esto, primero necesitamos conectarnos a la base de datos. Agruparemos
+la información de ventas por cada año usando queries de tipo SQL.
+Necesitamos también una librería especial en R llamada
+<code>openxlsx</code>, la cual tiene la ventaja de que no tiene 
+dependencias con Java.
+</p>
+
+<pre class="example">
+## Output file: reporte2.xlsx
+library(DBI)
+library(RMariaDB)
+source(conector.R)
+
+anual &lt;- dbGetQuery(con, "SELECT SUM(unit_sales) AS VENTAS,DATE_FORMAT(sales_date, '%Y') AS AÑO FROM ventas GROUP BY DATE_FORMAT(sales_date, '%Y') ORDER BY sales_date  ASC")
+dbDisconnect(con)
+
+library(openxlsx)
+
+wb &lt;- createWorkbook()
+addWorksheet(wb, sheetName = "REPORTE")
+ts &lt;- hs &lt;- createStyle(
+  fontColour = "#0869ca", fontSize = 14, halign = 'center', textDecoration = 'bold',
+  fontName = "DejaVu Sans Mono", fgFill = "#d2d8dd"
+)
+mergeCells(wb, 1, cols = 1:2, rows = 1)
+addStyle(wb, sheet = 1, ts, rows = 1, cols = 1, gridExpand = TRUE)
+writeData(wb, 1, x = "Reporte de Ventas", startRow = 1, startCol = 1)
+sts &lt;- hs &lt;- createStyle(
+  fontColour = "#121314", fontSize = 13, halign = 'center', textDecoration = 'italic',
+  fontName = "DejaVu Sans Mono"
+)
+mergeCells(wb, 1, cols = 1:2, rows = 2)
+addStyle(wb, sheet = 1, sts, rows = 2, cols = 1, gridExpand = TRUE)
+writeData(wb, 1, x = "Reporte Anual", startRow = 2, startCol = 1)
+hs &lt;- createStyle( fontColour = "#FFFFFF", fontSize = 12, fontName = "DejaVu Sans Mono", fgFill = "#4F80BD")
+addStyle(wb, sheet = 1, hs, rows = 3, cols = 1:2,gridExpand = TRUE)
+bs &lt;- createStyle(border = c("top", "bottom", "left", "right"), borderColour = "#4F81BD", borderStyle = "thick", fontSize = 10, fontName = "DejaVu Sans Mono")
+addStyle(wb, sheet = 1, bs, rows = 4:7, cols = 1:2, gridExpand = TRUE)
+addFilter(wb, 1, row = 3, cols = 1:ncol(anual))
+writeDataTable(wb, 1, x = anual, withFilter = TRUE, startRow = 3,  startCol = 1)  ###, tableStyle = "TableStyleMedium21" )
+ms &lt;- createStyle(fontColour = "#37cd30")
+conditionalFormatting(wb, 1,
+                      cols = 1,
+                      rows = 4:7, rule = "&gt;150000", style = ms
+)
+writeData(wb, 1, x = "*Los valores mayores a 150,000 se resaltan", startRow = 8, startCol = 1)
+setColWidths(wb, sheet = 1, cols = 1:2,widths = "auto")
+saveWorkbook(wb, file = "reporte2.xlsx", overwrite = TRUE)
+</pre>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Huehueocélotl</p>
-<p class="date">Created: 2023-02-13 Mon 09:57</p>
+<p class="date">Created: 2023-02-17 Fri 12:27</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
